@@ -5,7 +5,7 @@
   <name>XML_fo2pdf</name>
   <summary>Converts a xsl-fo file to pdf/ps/pcl/text/etc with the help of apache-fop</summary>
   <maintainer>
-    <initials>chregu</initials>
+    <user>chregu</user>
     <name>Christian Stocker</name>
     <email>chregu@php.net</email>
   </maintainer>
