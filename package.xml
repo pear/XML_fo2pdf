@@ -10,9 +10,12 @@
     <email>chregu@php.net</email>
   </maintainer>
   <release>
-    <version>0.96</version>
-    <date>2001-09-14</date>
+    <version>0.97</version>
+    <date>2001-09-24</date>
     <notes>
+        0.97
+        - possibility to add config-file for including other fonts
+        0.96
 	    - runs with fop 0.20 
         - call of java objects is completely rewritten
         - $fop = new XML_fo2pdf("input.fo") should not be used anymore, use $fop->run("input.fo") instead

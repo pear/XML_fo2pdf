@@ -83,7 +83,19 @@ class XML_fo2pdf  {
     " @see printPDF()
     */
     var $contenttype = "application/pdf";
+
+    /** 
+    * If you need more Fonts or have some other stuff, which needs a
+    *  Fop-Configfile, you can assign one
+    *
+    * See http://xml.apache.org/fop/fonts.html for Details about
+    *  embedding fonts.
+    *
+    * @var configFile
+    */
     
+    var $configFile = Null;  
+      
     /**
     * constructor
     * ATTENTION (you've been warned!):
@@ -124,7 +136,14 @@ class XML_fo2pdf  {
 
         $this->pdf = $pdf;
         $this->fo = $fo;
-        $options = array( $this->fo,"-".$this->renderer,$this->pdf);
+        $options = array();
+        if ($this->configFile)
+        {
+            $options = array("-c",$this->configFile);
+        }
+
+        array_push($options,$this->fo,"-".$this->renderer,$this->pdf);
+
 
         /**
         * according to the documentation, the following  lines should be enough, 
@@ -368,6 +387,18 @@ class XML_fo2pdf  {
     function setContentType($contenttype = "application/pdf")
     {
         $this->contenttype = $contenttype;
+    }
+
+    /**
+    * sets the configfile-type
+    *
+    * @param string $configFile the config file for fop 
+    * @see $configFile
+    * @access public
+    */  
+    function setConfigFile($configFile)
+    {
+        $this->configFile = $configFile;
     }
     
 }

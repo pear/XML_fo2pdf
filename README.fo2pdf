@@ -29,12 +29,12 @@
    it with 1.2.2 from sun on linux, see the Fop-Docs for details).
   Furthermore you have to compile your php with --with-java and to adjust
    your php.ini file. It can be a rather painful task to get java and php
-   to work together. (i also tested this only with jdk 1.2.2, i couldn't 1.3.1 
-   get to work)
+   to work together. (i also tested this only with jdk 1.2.2, got 1.3.1 to work
+   but not together with sablotron....)
    See http://www.phpbuilder.com/columns/marknold20001221.php3 or
-   http://www.linuxwebdevnews.com/articles/php-java-xslt.php?pid=347
-   for more details about java and php or ask me, if you're stuck
-   (especially with linux. windows is not my area..)
+   http://www.linuxwebdevnews.com/articles/php-java-xslt.php?pid=347 or
+   http://php.chregu.tv/java-debian.html (some config tips)
+   for more details about java and php.
 
  Usage:
     require_once("XML/fo2pdf.php");
@@ -44,6 +44,10 @@
     // necessary here, but you can set it to other values        
     $fop->setRenderer("pdf");
     $fop->setContentType("application/pdf");
+    //If you want other fonts in your PDF, you need to declare them in a
+    // config file. Declare here the path to this file [optional]. 
+    // More information about fonts and fop on the apache-fop webpage.
+    $fop->setConfigFile("userconfig.xml");    
      if (PEAR::isError($error = $fop->run("simple.fo")))
      {
       die("FOP ERROR: ". $error->getMessage());
