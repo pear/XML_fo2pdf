@@ -17,7 +17,8 @@
     </Notes>
   </Release>
   <FileList>
-    <Dir>XML</Dir>
-    <File>fo2pdf.php</File>
+    <Dir Name="XML">
+    <File Role="php">fo2pdf.php</File>
+	</Dir>
   </FileList>
 </Package>
