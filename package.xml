@@ -5,18 +5,21 @@
   <name>XML_fo2pdf</name>
   <summary>Converts a xsl-fo file to pdf/ps/pcl/text/etc with the help of apache-fop</summary>
   <maintainer>
-    <initials>cs</initials>
+    <initials>chregu</initials>
     <name>Christian Stocker</name>
     <email>chregu@php.net</email>
   </maintainer>
   <release>
-    <version>0.95</version>
-    <date>2001-09-21</date>
+    <version>0.96</version>
+    <date>2001-09-14</date>
     <notes>
 	    - runs with fop 0.20 
         - call of java objects is completely rewritten
         - $fop = new XML_fo2pdf("input.fo") should not be used anymore, use $fop->run("input.fo") instead
         - can output not only pdf, but also ps/pcl/txt and whatever fop supports
+        - Documentation moved to README.fo2pdf
+        - better and more error reporting
+        - setRenderer() sets now also the content-type
     </notes>
   </release>
   <filelist>
