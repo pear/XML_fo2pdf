@@ -22,7 +22,7 @@
 * fo to pdf converter.
 *
 * with fo (formating objects) it's quite easy to convert xml-documents into
-*  pdf-docs.
+*  pdf-docs (and not only pdf, but also ps, pcl, txt and more)
 *
 * An introduction into formating objects can be found at
 *  http://www.w3.org/TR/xsl/slice6.html#fo-section
@@ -45,28 +45,30 @@
 *
 * Requirements:
 *
-*  You need Fop from the xml-apache project (http://xml.apache.org/fop) and
-*   Java (1.1.x or later, i tested it with 1.2.2 from sun on linux, see the
-*   Fop-Docs for details).
+*  You need Fop (version 0.20.1 was used for this) from the xml-apache 
+*   project (http://xml.apache.org/fop) and Java (1.1.x or later, i tested 
+*   it with 1.2.2 from sun on linux, see the Fop-Docs for details).
 *  Furthermore you have to compile your php with --with-java and to adjust
 *   your php.ini file. It can be a rather painful task to get java and php
-*   to work together.
+*   to work together. (i also tested this only with jdk 1.2.2, i couldn't 1.3.1 
+*   get to work)
 *   See http://www.phpbuilder.com/columns/marknold20001221.php3 or
 *   http://www.linuxwebdevnews.com/articles/php-java-xslt.php?pid=347
 *   for more details about java and php or ask me, if you're stuck
 *   (especially with linux. windows is not my area..)
 *
-* Todo:
-*  - Errordetection
-*  - Use embedding instead of org.apache.fop.apps.CommandLine-
-*     this way, we maybe do not have to write temp-files and
-*     we can render other stuff than only pdf (txt,pcl,ps,...)
-*     see http://xml.apache.org/fop/embedding.html for details
-*
 * Usage:
 *    require_once("XML/fo2pdf.php");
 *    //make a pdf from simple.fo and save the pdf in a tmp-folder
-*    $fop = new xml_fo2pdf("simple.fo");
+*    $fop = new xml_fo2pdf();
+*    // the following 2 lines are the default settins, so not
+*    // necessary here, but you can set it to other values        
+*    $fop->setRenderer("pdf");
+*    $fop->setContentType("application/pdf");
+*     if (PEAR::isError($error = $fop->run("simple.fo")))
+*     {
+*      die("FOP ERROR: ". $error->getMessage());
+*     }
 *    //print pdf to the outputbuffer,
 *    // including correct Header ("Content-type: application/pdf")
 *    $fop->printPDF();
@@ -85,7 +87,8 @@
 *      print $content;
 *      die();
 *    }
-*    $fop = new xml_fo2pdf("simple.fo");
+*    $fop = new xml_fo2pdf();
+*    $fop->run("simple.fo");
 *    $fop->printPDF();
 *    $fop->deletePDF();
 *    print $cache->end("+30");
@@ -94,8 +97,9 @@
 * @version  $Id$
 * @package  XML
 */
+require_once( "PEAR.php") ;
 
-class XML_fo2pdf {
+class XML_fo2pdf extends pear {
 
     /**
     * fo-file used in this class
@@ -125,23 +129,44 @@ class XML_fo2pdf {
     */
     var $tmppdfprefix = "pdffo";
 
-
+    /**
+    * the render Type. At the moment (fop 0.20.1), possible values are
+    * - awt  
+    * - mif
+    * - pcl
+    * - pdf
+    * - ps  
+    * - txt 
+    * - xml
+    *
+    * @var string
+    */
+    var $renderer = "pdf";
+    
+    /**
+    * the content-type to be sent if printPDF is called.
+    *
+    * @var contenttype
+    " @see printPDF()
+    */
+    var $contenttype = "application/pdf";
+    
     /**
     * constructor
-    * One can pass an input fo-file already here (the other possibility
-    * is with the run or runFromString method).
-    *  and if the pdf should be stored permanently, a filename/path for
-    *  that can also be passed here.
+    * ATTENTION (you've been warned!):
+    * You should not pass the values here, 'cause then you don't have
+    *  Error-Reporting. This variables are only here for Backwards Compatibilty..
+    *  Use $fop->run("input.fo","output.pdf") instead.
     *
-    * @param    string  $fo     file input fo-file
-    * @param    string  $pdf    file output pdf-file
+    * @param    string  $fo     file input fo-file (do not use it anymore)
+    * @param    string  $pdf    file output pdf-file (do not use it anymore)
     * @see run(), runFromString(), runFromFile()
     * @access public
     */
-    function xml_fo2pdf($fo = "", $pdf = "")
+    function xml_fo2pdf ($fo = Null, $pdf = "")
     {
-        if ($fo) {
-            $this->run($fo, $pdf);
+        if (!(is_null($fo))) {
+           $this->run($fo, $pdf);
         }
     }
 
@@ -166,12 +191,86 @@ class XML_fo2pdf {
 
         $this->pdf = $pdf;
         $this->fo = $fo;
-        $options = array($this->fo, $this->pdf);
-        $java = new Java("org.apache.fop.apps.CommandLine", $options);
-        $java->run();
+        $options = array( $this->fo,"-".$this->renderer,$this->pdf);
+
+        /**
+        * according to the documentation, the following  lines should be enough, 
+        * to do, what we want. but it didn't work. Yes, it did, but it produced
+        * approx. 10 pdf-files for each run...
+        *
+        * $options = new Java("org.apache.fop.apps.CommandLineOptions",$options);
+        * $starter = $options->getStarter();
+        * $starter->run();
+        *
+        * Therefore i took the code from org/apache/fop/apps/CommandLineStarter.java
+        *  converted it to php-code and it works now... if anyone has a better solution
+        *  please inform me ;)
+        */
+        java_last_exception_clear();
+        $commandLineOptions= @new Java("org.apache.fop.apps.CommandLineOptions",$options);
+
+        if ($exc = java_last_exception_get()) 
+        {            
+             return new PEAR_Error($exc->getMessage(), 11, PEAR_ERROR_RETURN, null, null );
+        }
+
+
+        $starter = new Java("org.apache.fop.apps.CommandLineStarter",$commandLineOptions);
+
+        if ($exc = java_last_exception_get()) 
+        {
+             return new PEAR_Error($exc->getMessage(), 11, PEAR_ERROR_RETURN, null, null );
+        }
+
+        
+        $input = $commandLineOptions->getInputHandler();
+
+        $parser = $input->getParser();
+        $starter->setParserFeatures($parser);
+
+        $driver = new Java ("org.apache.fop.apps.Driver");
+
+        $driver->setBufferFile($commandLineOptions->getBufferFile());
+        
+        $renderer = @$commandLineOptions->getRenderer();
+        if ($exc = java_last_exception_get()) 
+        {          
+             return new PEAR_Error($exc->getMessage(), 11, PEAR_ERROR_RETURN, null, null );
+        }
+        
+        @$driver->setRenderer($renderer);
+        if ($exc = java_last_exception_get()) 
+        {          
+             return new PEAR_Error($exc->getMessage(), 11, PEAR_ERROR_RETURN, null, null );
+        }
+
+        $stream = @new Java("java.io.FileOutputStream",$commandLineOptions->getOutputFile());
+        if ($exc = java_last_exception_get()) 
+        {
+             return new PEAR_Error($exc->getMessage(), 11, PEAR_ERROR_RETURN, null, null );
+        }
+
+        
+        @$driver->setOutputStream($stream);
+        if ($exc = java_last_exception_get()) 
+        {
+             return new PEAR_Error($exc->getMessage(), 11, PEAR_ERROR_RETURN, null, null );
+        }
+        
+        $renderer = $driver->getRenderer();
+        $renderer->setOptions($commandLineOptions->getRendererOptions());
+
+        @$driver->render($parser, $input->getInputSource());
+        if ($exc = java_last_exception_get()) 
+        {
+             return new PEAR_Error($exc->getMessage(), 11, PEAR_ERROR_RETURN, null, null );
+        }
+        
         if ($DelFo) {
             $this->deleteFo($fo);
         }
+        
+        return True;
     }
 
     /**
@@ -194,7 +293,7 @@ class XML_fo2pdf {
         $fp = fopen($fo, "w+");
         fwrite($fp, $fostring);
         fclose($fp);
-        $this->run($fo, $pdf, True);
+        return $this->run($fo, $pdf, True);
     }
     /**
     * A wrapper to run for better readabilty
@@ -257,7 +356,7 @@ class XML_fo2pdf {
     function  printPDF($pdf = "")
     {
         $pdf = $this->returnPDF($pdf);
-        Header("Content-type: application/pdf\nContent-Length: " . strlen($pdf));
+        Header("Content-type: ".$this->contenttype."\nContent-Length: " . strlen($pdf));
         print $pdf;
     }
 
@@ -280,6 +379,31 @@ class XML_fo2pdf {
        fclose($fd);
        return $content;
     }
+    
+    /**
+    * sets the rendertype
+    *
+    * @see $this-renderer
+    * @access public
+    */  
+    
+    function setRenderer($renderer = "pdf")
+    {
+        $this->renderer = $renderer;
+    }
 
+    /**
+    * sets the content-type
+    *
+    * @see $this-contenttype
+    * @access public
+
+    */  
+    
+    function setContentType($contenttype = "application/pdf")
+    {
+        $this->contenttype = $contenttype;
+    }
+    
 }
 ?>
