@@ -24,10 +24,11 @@
 
  Requirements:
 
-  You need Fop (version 0.20.1 was used for this) from the xml-apache 
+- You need Fop (version 0.20.1 was used for testing) from the xml-apache 
    project (http://xml.apache.org/fop) and Java (1.1.x or later, i tested 
    it with 1.2.2 from sun on linux, see the Fop-Docs for details).
-  Furthermore you have to compile your php with --with-java and to adjust
+   
+- Furthermore you have to compile your php with --with-java and to adjust
    your php.ini file. It can be a rather painful task to get java and php
    to work together. (i also tested this only with jdk 1.2.2, got 1.3.1 to work
    but not together with sablotron....)
@@ -35,6 +36,21 @@
    http://www.linuxwebdevnews.com/articles/php-java-xslt.php?pid=347 or
    http://php.chregu.tv/java-debian.html (some config tips)
    for more details about java and php.
+   For your reference, my relevant parts in php.ini looks like this:
+   ***
+   extension=libphp_java.so
+   extension.dir=/usr/local/lib/php/20010901/
+   [java]
+    java.class.path=/usr/local/lib/php/php_java.jar:/usr/local/share/java/fop.jar:/usr/local/share/java/batik.jar:/usr/share/java/xalan-2.0.1.jar:/usr/share/java/xerces.jar:/usr/local/share/java/jimi-1.0.jar
+   java.library=/usr/lib/java/jre/lib/i386/libjava.so
+   ***
+
+
+- If you want to include images or svg-files, then FOP needs an XServer (this is a
+    limitation of the graphics-support in java. See 
+    http://www.geocities.com/marcoschmidt.geo/java-image-coding.html
+    for details). Normally webservers don't have Xservers installed, but I made 
+    some good experiences with Xfvb.
 
  Usage:
     require_once("XML/fo2pdf.php");
