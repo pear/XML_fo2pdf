@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!-- do not use the "Type" attribute here, that one is only for
      generated package.xml files -->
-<Package>
-  <Name>XML_fo2pdf</Name>
-  <Summary>Convert a xsl-fo file to pdf with the help of apache-fop</Summary>
-  <Maintainer>
-    <Initials>cs</Initials>
-    <Name>Christian Stocker</Name>
-    <Email>chregu@php.net</Email>
-  </Maintainer>
-  <Release>
-    <Version>0.9</Version>
-    <Date>2001-06-21</Date>
-    <Notes>
+<package>
+  <name>XML_fo2pdf</name>
+  <summary>Convert a xsl-fo file to pdf with the help of apache-fop</summary>
+  <maintainer>
+    <initials>cs</initials>
+    <name>Christian Stocker</name>
+    <email>chregu@php.net</email>
+  </maintainer>
+  <release>
+    <version>0.9</version>
+    <date>2001-06-21</date>
+    <notes>
 	Documentation is in the php-file itself.
-    </Notes>
-  </Release>
-  <FileList>
-    <Dir Name="/" BaseInstallDIr="XML">
-      <File Role="php">fo2pdf.php</File>
-    </Dir>
-  </FileList>
-</Package>
+    </notes>
+  </release>
+  <filelist>
+    <dir name="/" baseinstalldir="XML">
+      <file role="php">fo2pdf.php</file>
+    </dir>
+  </filelist>
+</package>
