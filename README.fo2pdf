@@ -34,6 +34,7 @@
    but not together with sablotron....)
    See http://www.phpbuilder.com/columns/marknold20001221.php3 or
    http://www.linuxwebdevnews.com/articles/php-java-xslt.php?pid=347 or
+   http://www.onlamp.com/pub/a/php/2001/06/14/php_jav.html or
    http://php.chregu.tv/java-debian.html (some config tips)
    for more details about java and php.
    For your reference, my relevant parts in php.ini looks like this:
