@@ -184,8 +184,8 @@ class XML_fo2pdf {
     *  temporary fo-file is created here (and will be deleted
     *  in the run() function.)
     *
-    * @param    string  fo input fo-string
-    * @param    string  file output pdf-file
+    * @param    string  $fostring   fo input fo-string
+    * @param    string  $pdf        file output pdf-file
     * @see run()
     */
     function runFromString($fostring, $pdf = "")
@@ -201,8 +201,8 @@ class XML_fo2pdf {
     *
     * This method just calls run....
     *
-    * @param    string  fo input fo-string
-    * @param    string  file output pdf-file
+    * @param    string  $fo     fo input fo-string
+    * @param    string  $pdf    file output pdf-file
     * @see run()
     */
     function runFromFile($fo, $pdf = "")
@@ -217,7 +217,7 @@ class XML_fo2pdf {
     *  for example in a Cache, you don't need it afterwards.
     * If no pdf is given, the one generated in run() is deleted
     *
-    * @param    string  file output pdf-file
+    * @param    string  $pdf    file output pdf-file
     * @access public
     */
     function deletePDF($pdf = "")
@@ -233,8 +233,7 @@ class XML_fo2pdf {
     * If you dynamically create fos, you don't need it afterwards.
     * If no fo-file is given, the one generated in run() is deleted
     *
-    * @param    string  file input fo-file
-    * @access public    
+    * @param    string  $fo  file input fo-file
     */
     function deleteFo($fo = "")
     {
@@ -251,7 +250,7 @@ class XML_fo2pdf {
     *  to the browser, use this.
     * If no pdf-file is given, the generated from run() is taken.
     *
-    * @param    string  file output pdf-file
+    * @param    string  $pdf    file output pdf-file
     * @see returnPDF()
     * @access public    
     */
@@ -267,9 +266,9 @@ class XML_fo2pdf {
     *
     * If no pdf-file is given, the generated from run() is taken.
     *
-    * @param    string file output pdf-file
+    * @param    string  $pdf    file output pdf-file
     * @return   string pdf
-    * @see run()
+    * @see run()    
     */
     function returnPDF($pdf = "")
         {
