@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- do not use the "Type" attribute here, that one is only for
+     generated package.xml files -->
+<Package>
+  <Name>XML_fo2pdf</Name>
+  <Summary>Convert a xsl-fo file to pdf with the help of apache-fop</Summary>
+  <Maintainer>
+    <Initials>chregu</Initials>
+    <Name>Christian Stocker</Name>
+    <Email>chregu@php.net</Email>
+  </Maintainer>
+  <Release>
+    <Version>0.9</Version>
+    <Date>2001-06-21</Date>
+    <Notes>
+	Documentation is in the php-file itself.
+    </Notes>
+  </Release>
+  <FileList>
+    <Dir>XML</Dir>
+    <File>fo2pdf.php</File>
+  </FileList>
+</Package>
