@@ -5,7 +5,7 @@
   <Name>XML_fo2pdf</Name>
   <Summary>Convert a xsl-fo file to pdf with the help of apache-fop</Summary>
   <Maintainer>
-    <Initials>chregu</Initials>
+    <Initials>cs</Initials>
     <Name>Christian Stocker</Name>
     <Email>chregu@php.net</Email>
   </Maintainer>
@@ -17,8 +17,8 @@
     </Notes>
   </Release>
   <FileList>
-    <Dir Name="XML">
-    <File Role="php">fo2pdf.php</File>
-	</Dir>
+    <Dir Name="/" BaseInstallDIr="XML">
+      <File Role="php">fo2pdf.php</File>
+    </Dir>
   </FileList>
 </Package>
