@@ -19,18 +19,7 @@
     <version>0.98</version>
     <date>2003-03-31</date>
     <notes>
-        0.98
         - changed code to work with FOP 0.20.4 (Arnaud)
-        0.97
-        - possibility to add config-file for including other fonts
-        0.96
-	    - runs with fop 0.20 
-        - call of java objects is completely rewritten
-        - $fop = new XML_fo2pdf("input.fo") should not be used anymore, use $fop->run("input.fo") instead
-        - can output not only pdf, but also ps/pcl/txt and whatever fop supports
-        - Documentation moved to README.fo2pdf
-        - better and more error reporting
-        - setRenderer() sets now also the content-type
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="XML">
