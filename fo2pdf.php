@@ -30,7 +30,7 @@
 * @version  $Id$
 * @package  XML
 */
-require_once( "PEAR.php") ;
+require_once "PEAR.php";
 
 class XML_fo2pdf  {
 
@@ -94,7 +94,7 @@ class XML_fo2pdf  {
     * @var configFile
     */
     
-    var $configFile = Null;  
+    var $configFile = null;  
       
     /**
     * constructor
@@ -108,7 +108,7 @@ class XML_fo2pdf  {
     * @see run(), runFromString(), runFromFile()
     * @access public
     */
-    function xml_fo2pdf ($fo = Null, $pdf = "")
+    function xml_fo2pdf ($fo = null, $pdf = "")
     {
         if (!(is_null($fo))) {
            $this->run($fo, $pdf);
@@ -131,19 +131,18 @@ class XML_fo2pdf  {
     */
     function run($fo, $pdf = "", $DelFo = False)
     {
-        if (!$pdf)
+        if (!$pdf) {
             $pdf = tempnam($this->tmpdir, $this->tmppdfprefix);
+        }
 
         $this->pdf = $pdf;
         $this->fo = $fo;
         $options = array();
-        if ($this->configFile)
-        {
-            $options = array("-c",$this->configFile);
+        if ($this->configFile) {
+            $options = array("-c", $this->configFile);
         }
 
-        array_push($options,$this->fo,"-".$this->renderer,$this->pdf);
-
+        array_push($options, $this->fo, "-" . $this->renderer, $this->pdf);
 
         /**
         * according to the documentation, the following  lines should be enough, 
@@ -155,83 +154,69 @@ class XML_fo2pdf  {
         * $starter->run();
         *
         * Therefore i took the code from org/apache/fop/apps/CommandLineStarter.java
-        *  converted it to php-code and it works now... if anyone has a better solution
-        *  please inform me ;)
+        * converted it to php-code and it works now... if anyone has a better solution
+        * please inform me ;)
         */
+        $commandLineOptions= @new Java("org.apache.fop.apps.CommandLineOptions", $options);
 
-
-        $commandLineOptions= @new Java("org.apache.fop.apps.CommandLineOptions",$options);
-
-        if ($exc = java_last_exception_get()) 
-        {            
+        if ($exc = java_last_exception_get()) {
              java_last_exception_clear();            
-            return new PEAR_Error($exc->getMessage() ." in ". __FILE__ .":". __LINE__, 11, PEAR_ERROR_RETURN, null, null );
-
+            return new PEAR_Error($exc->getMessage() . " in " . __FILE__  . ":" . __LINE__, 11, PEAR_ERROR_RETURN, null, null);
         }
-
 
         $starter = new Java("org.apache.fop.apps.CommandLineStarter",$commandLineOptions);
 
-        if ($exc = java_last_exception_get()) 
-        {
-             java_last_exception_clear();
-            return new PEAR_Error($exc->getMessage() ." in ". __FILE__ .":". __LINE__, 11, PEAR_ERROR_RETURN, null, null );
+        if ($exc = java_last_exception_get()) {
+            java_last_exception_clear();
+            return new PEAR_Error($exc->getMessage() . " in " . __FILE__ . ":" . __LINE__, 11, PEAR_ERROR_RETURN, null, null);
         }
 
-        
         $input = $commandLineOptions->getInputHandler();
 
         $parser = $input->getParser();
         $starter->setParserFeatures($parser);
 
-        $driver = new Java ("org.apache.fop.apps.Driver");
+        $driver = new Java("org.apache.fop.apps.Driver");
 
         $driver->setBufferFile($commandLineOptions->getBufferFile());
-        
+
         $renderer = @$commandLineOptions->getRenderer();
-        if ($exc = java_last_exception_get()) 
-        {          
-             java_last_exception_clear();
-            return new PEAR_Error($exc->getMessage() ." in ". __FILE__ .":". __LINE__, 11, PEAR_ERROR_RETURN, null, null );
+        if ($exc = java_last_exception_get()) {
+            java_last_exception_clear();
+            return new PEAR_Error($exc->getMessage() . " in " . __FILE__ . ":" . __LINE__, 11, PEAR_ERROR_RETURN, null, null);
         }
-        
-        
+
         @$driver->setRenderer($renderer);
-        if ($exc = java_last_exception_get()) 
-        {          
-             java_last_exception_clear();             
-            return new PEAR_Error($exc->getMessage() ." in ". __FILE__ .":". __LINE__, 11, PEAR_ERROR_RETURN, null, null );
+        if ($exc = java_last_exception_get()) {
+            java_last_exception_clear();
+            return new PEAR_Error($exc->getMessage() . " in " . __FILE__ . ":" . __LINE__, 11, PEAR_ERROR_RETURN, null, null);
         }
 
         $stream = @new Java("java.io.FileOutputStream",$commandLineOptions->getOutputFile());
-        if ($exc = java_last_exception_get()) 
-        {
-             java_last_exception_clear();
-            return new PEAR_Error($exc->getMessage() ." in ". __FILE__ .":". __LINE__, 11, PEAR_ERROR_RETURN, null, null );
+        if ($exc = java_last_exception_get()) {
+            java_last_exception_clear();
+            return new PEAR_Error($exc->getMessage() . " in " . __FILE__ . ":" . __LINE__, 11, PEAR_ERROR_RETURN, null, null);
         }
 
-        
         @$driver->setOutputStream($stream);
-        if ($exc = java_last_exception_get()) 
-        {
-             java_last_exception_clear();
-            return new PEAR_Error($exc->getMessage() ." in ". __FILE__ .":". __LINE__, 11, PEAR_ERROR_RETURN, null, null );
+        if ($exc = java_last_exception_get()) {
+            java_last_exception_clear();
+            return new PEAR_Error($exc->getMessage() . " in " . __FILE__ . ":" . __LINE__, 11, PEAR_ERROR_RETURN, null, null);
         }
-        
+
         $renderer = $driver->getRenderer();
         $renderer->setOptions($commandLineOptions->getRendererOptions());
 
         @$driver->render($parser, $input->getInputSource());
-        if ($exc = java_last_exception_get()) 
-        {             
-             java_last_exception_clear();
-            return new PEAR_Error($exc->getMessage() ." in ". __FILE__ .":". __LINE__, 11, PEAR_ERROR_RETURN, null, null );
+        if ($exc = java_last_exception_get()) {
+            java_last_exception_clear();
+            return new PEAR_Error($exc->getMessage() . " in " . __FILE__ . ":" . __LINE__, 11, PEAR_ERROR_RETURN, null, null);
         }
-        
+
         if ($DelFo) {
             $this->deleteFo($fo);
         }
-   
+
         return True;
     }
 
@@ -255,8 +240,9 @@ class XML_fo2pdf  {
         $fp = fopen($fo, "w+");
         fwrite($fp, $fostring);
         fclose($fp);
-        return $this->run($fo, $pdf, True);
+        return $this->run($fo, $pdf, true);
     }
+
     /**
     * A wrapper to run for better readabilty
     *
@@ -283,8 +269,9 @@ class XML_fo2pdf  {
     */
     function deletePDF($pdf = "")
     {
-        if (!$pdf)
+        if (!$pdf) {
             $pdf = $this->pdf;
+        }
         unlink ($pdf);
     }
 
@@ -298,9 +285,9 @@ class XML_fo2pdf  {
     */
     function deleteFo($fo = "")
     {
-        if (!$fo)
+        if (!$fo) {
             $fo = $this->fo;
-
+        }
         unlink ($fo);
     }
 
@@ -315,10 +302,10 @@ class XML_fo2pdf  {
     * @see returnPDF()
     * @access public    
     */
-    function  printPDF($pdf = "")
+    function printPDF($pdf = "")
     {
         $pdf = $this->returnPDF($pdf);
-        Header("Content-type: ".$this->contenttype."\nContent-Length: " . strlen($pdf));
+        header("Content-type: " . $this->contenttype . "\nContent-Length: " . strlen($pdf));
         print $pdf;
     }
 
@@ -332,14 +319,14 @@ class XML_fo2pdf  {
     * @see run()    
     */
     function returnPDF($pdf = "")
-        {
-       if (!$pdf)
-           $pdf = $this->pdf;
-
-       $fd = fopen($pdf, "r");
-       $content = fread( $fd, filesize($pdf) );
-       fclose($fd);
-       return $content;
+    {
+        if (!$pdf) {
+            $pdf = $this->pdf;
+        }
+        $fd = fopen($pdf, "r");
+        $content = fread( $fd, filesize($pdf) );
+        fclose($fd);
+        return $content;
     }
     
     /**
@@ -354,25 +341,23 @@ class XML_fo2pdf  {
     function setRenderer($renderer = "pdf",$overwriteContentType = True)
     {
         $this->renderer = $renderer;
-        if ($overwriteContentType)
-        {
-            switch ($renderer)
-            {        
-                    case "pdf":
-                    $this->contenttype = "application/pdf";
-                    break;
-                    case "ps":
-                    $this->contenttype = "application/ps";
-                    break;
-                    case "pcl":
-                    $this->contenttype = "application/pcl";
-                    break;                    
-                    case "txt":
-                    $this->contenttype = "text/plain";
-                    break;                                        
-                    case "xml":
-                    $this->contenttype = "text/xml";
-                    break;                                        
+        if ($overwriteContentType) {
+            switch ($renderer) {
+            case "pdf":
+                $this->contenttype = "application/pdf";
+                break;
+            case "ps":
+                $this->contenttype = "application/ps";
+                break;
+            case "pcl":
+                $this->contenttype = "application/pcl";
+                break;                    
+            case "txt":
+                $this->contenttype = "text/plain";
+                break;                                        
+            case "xml":
+                $this->contenttype = "text/xml";
+                break;                                        
              }
          }
     }
@@ -400,6 +385,5 @@ class XML_fo2pdf  {
     {
         $this->configFile = $configFile;
     }
-    
 }
 ?>
