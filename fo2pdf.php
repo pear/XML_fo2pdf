@@ -133,9 +133,10 @@ class XML_fo2pdf {
     *  and if the pdf should be stored permanently, a filename/path for
     *  that can also be passed here.
     *
-    * @param    string  file input fo-file
-    * @param    string  file output pdf-file
+    * @param    string  $fo     file input fo-file
+    * @param    string  $pdf    file output pdf-file
     * @see run(), runFromString(), runFromFile()
+    * @access public
     */
     function xml_fo2pdf($fo = "", $pdf = "")
     {
@@ -153,9 +154,9 @@ class XML_fo2pdf {
     *  if the pdf is not passed or empty/false, a temporary pdf-file
     *   will be created
     *
-    * @param    string      file input fo-file
-    * @param    string      file output pdf-file
-    * @param    boolean     if the fo should be deleted after execution
+    * @param    string  $fo     file input fo-file
+    * @param    string  $pdf    file output pdf-file
+    * @param    boolean $DelFo  if the fo should be deleted after execution
     * @see runFromString()
     */
     function run($fo, $pdf = "", $DelFo = False)
@@ -217,6 +218,7 @@ class XML_fo2pdf {
     * If no pdf is given, the one generated in run() is deleted
     *
     * @param    string  file output pdf-file
+    * @access public
     */
     function deletePDF($pdf = "")
     {
@@ -232,6 +234,7 @@ class XML_fo2pdf {
     * If no fo-file is given, the one generated in run() is deleted
     *
     * @param    string  file input fo-file
+    * @access public    
     */
     function deleteFo($fo = "")
     {
@@ -250,6 +253,7 @@ class XML_fo2pdf {
     *
     * @param    string  file output pdf-file
     * @see returnPDF()
+    * @access public    
     */
     function  printPDF($pdf = "")
     {
