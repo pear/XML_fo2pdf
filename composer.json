@@ -1,0 +1,25 @@
+{
+    "authors": [
+        {
+            "email": "chregu@php.net",
+            "name": "Christian Stocker",
+            "role": "Lead"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+            "./"
+        ]
+    },
+    "description": "More info available on: http://pear.php.net/package/XML_fo2pdf",
+    "license": "PHP License",
+    "name": "pear/xml_fo2pdf",
+    "support": {
+        "issues": "http:///bugs/search.php?cmd=display&package_name[]=XML_fo2pdf",
+        "source": "https://github.com/pear/XML_fo2pdf"
+    },
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    }
+}
